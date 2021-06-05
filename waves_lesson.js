@@ -30,7 +30,8 @@ var stored = [];
 for (var i=0; i<NUM_SAMPLES; i++) {
   var sample = new THREE.Mesh(bob_geometry, material);
   sample.position.x = rest_x;
-  sample.position.y = (rest_y - PITCH) - (PITCH * i);
+  sample.position.y = (rest_y - 1) - (PITCH * i);
+  console.log("Placed " + i  + "at " + sample.position.y);
   sample.position.z = -5.0
   scene.add(sample);
   stored.push(sample);
@@ -38,17 +39,40 @@ for (var i=0; i<NUM_SAMPLES; i++) {
 var frame_count = 0;
 var spring = -1.0;
 var speed = 0.0;
+var anim_speed = 50.0;
+var next_frame = 0.0;
 function animate() {
-  requestAnimationFrame(animate);
-  for (var i=stored.length - 1; i > 0; i--) {
-    stored[i].position.x = stored[i-1].position.x;
+  var now = Date.now();
+  if (now >= next_frame) {
+    for (var i=stored.length - 1; i > 0; i--) {
+      stored[i].position.x = stored[i-1].position.x;
+    }
+  
+    var force = spring * (bob.position.x - rest_x);
+    speed += force * 0.01;
+    stored[0].position.x = bob.position.x;
+    bob.position.x += speed;
+    renderer.render(scene, camera);
+    next_frame = now + anim_speed;
   }
+  requestAnimationFrame(animate);
+}
 
-  renderer.render(scene, camera);
-  var force = spring * (bob.position.x - rest_x);
-  speed += force * 0.01;
-  stored[0].position.x = bob.position.x;
-  bob.position.x += speed;
+var speedBox = document.getElementById("speed");
+speedBox.innerHTML = (100.0/anim_speed).toString();
+
+document.getElementById("sim_slow").onclick = function() {
+  if (anim_speed <= 150.0) {
+    anim_speed += 25.0;
+  }
+  speedBox.innerHTML = (100.0/anim_speed).toString();
+}
+
+document.getElementById("sim_fast").onclick = function() {
+  if (anim_speed >= 50.0) {
+    anim_speed -= 25.0;
+  }
+  speedBox.innerHTML = (100.0/anim_speed).toString();
 }
 
 var tensionBox = document.getElementById("tension");
