@@ -9,9 +9,18 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const bob_geometry = new THREE.SphereGeometry(0.1, 32, 32);
-const material = new THREE.MeshBasicMaterial({color: 0xff0000});
-const bob = new THREE.Mesh(bob_geometry, material);
+const meter_geometry = new THREE.CircleGeometry(3, 32 );// THREE.SphereGeometry(0.1, 32, 32);
+const meter_material = new THREE.MeshBasicMaterial({color: 0xeeeeaa});
+const speed_meter = new THREE.Mesh(meter_geometry, meter_material);
+scene.add(speed_meter);
+
+speed_meter.position.x = 6.5;
+speed_meter.position.y = 4.5;
+speed_meter.position.z = -5.0;
+
+const bob_geometry = new THREE.CircleGeometry(0.1, 32 );// THREE.SphereGeometry(0.1, 32, 32);
+const bob_material = new THREE.MeshBasicMaterial({color: 0xff0000});
+const bob = new THREE.Mesh(bob_geometry, bob_material);
 scene.add(bob);
 var rest_x = -3.5;
 var amplitude = 4.0;
@@ -28,7 +37,7 @@ const NUM_SAMPLES = 100;
 const PITCH = 0.12;
 var stored = [];
 for (var i=0; i<NUM_SAMPLES; i++) {
-  var sample = new THREE.Mesh(bob_geometry, material);
+  var sample = new THREE.Mesh(bob_geometry, bob_material);
   sample.position.x = rest_x;
   sample.position.y = (rest_y - 1) - (PITCH * i);
   console.log("Placed " + i  + "at " + sample.position.y);
