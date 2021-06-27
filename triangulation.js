@@ -9,6 +9,9 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 var objParse = new ObjParser('models/cube.obj');
+console.log("Calling parse");
+objParse.parse();
+
 var frame_period = 50.0;
 var next_frame = 0.0;
 function animate() {
